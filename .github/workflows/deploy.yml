@@ -1,4 +1,4 @@
-name: Deploy VPN
+name: Deploy WARP VPN
 
 on:
   workflow_dispatch:
@@ -7,5 +7,14 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: 打印 Hello VPN
-        run: echo "🎉 VPN 部署流程开始运行啦！"
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Install wireguard-tools
+        run: sudo apt-get update && sudo apt-get install -y wireguard
+
+      - name: Start WARP
+        run: |
+          sudo mkdir -p /etc/wireguard/
+          sudo cp warp_config.json /etc/wireguard/wgcf.conf
+          sudo wg-quick up wgcf
